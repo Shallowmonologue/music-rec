@@ -28,15 +28,15 @@ def save_lookup_file(df):
 
     convert_to_byte_data(lookupDF)
 
-    lookupDF.to_hdf('./frontend/data/lookup.h5', key='df', mode='w')
+    lookupDF.to_hdf('../frontend/data/lookup.h5', key='df', mode='w')
 
-    pd.read_hdf('./frontend/data/lookup.h5', 'df')
+    pd.read_hdf('../frontend/data/lookup.h5', 'df')
          
 
 def setup_model_dir():
 	t = time.time()
 	dt = datetime.datetime.fromtimestamp(t).strftime('%Y%m%d%H%M%S')
-	path = './model/' + dt
+	path = '../model/' + dt
 	os.mkdir(path)
 	os.mkdir(path + '/preprocessing')
 

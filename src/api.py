@@ -38,24 +38,24 @@ def load_model():
     global probDF
 
     # Load model
-    model = nn.load_model('./model/working/std')
+    model = nn.load_model('../model/working/std')
     graph = tf.get_default_graph()
 
     # Load preprocessing dependencies
-    with open('./data/song-file-map.json', 'r') as f:
+    with open('../data/song-file-map.json', 'r') as f:
         song_file_map = json.load(f)
-    with open('./model/working/preprocessing/maps.json', 'r') as f:
+    with open('../model/working/preprocessing/maps.json', 'r') as f:
         column_maps = json.load(f)
-    with open('./model/working/preprocessing/max_list.json', 'r') as f:
+    with open('../model/working/preprocessing/max_list.json', 'r') as f:
         max_list = json.load(f)
 
-    scaler = joblib.load('./model/working/preprocessing/robust.scaler')
+    scaler = joblib.load('../model/working/preprocessing/robust.scaler')
 
     # Load song ID lookup for frontend
-    lookupDF = pd.read_hdf('./frontend/data/lookup.h5', 'df')
+    lookupDF = pd.read_hdf('../frontend/data/lookup.h5', 'df')
 
     # Model predictions for comparison
-    probDF = pd.read_pickle('./data/model_prob.pkl')
+    probDF = pd.read_pickle('../data/model_prob.pkl')
 
 
 def process_metadata_list(col):

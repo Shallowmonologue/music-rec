@@ -5,7 +5,7 @@ read.py
 02-22-19
 jack skrable
 """
-
+import json
 import os
 import sys
 import tables
@@ -103,14 +103,14 @@ def get_song_file_map(files):
         # Close store for reading
         s_hdf.close()
 
-    with open('./data/song-file-map.json', 'w') as file:
+    with open('../data/song-file-map.json', 'w') as file:
         json.dump(songmap, file, sort_keys=True, indent=2)
 
     return songmap
 
 
 def get_user_taste_data(filename):
-    tasteDF = pd.read_csv('./TasteProfile/train_triplets_SAMPLE.txt', sep='\t', header=None, names={'user,song,count'})
+    tasteDF = pd.read_csv('../TasteProfile/train_triplets_SAMPLE.txt', sep='\t', header=None, names={'user,song,count'})
 
     return tasteDF
 

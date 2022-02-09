@@ -25,7 +25,7 @@ args = utils.arg_parser()
 # Read data from h5 files into dataframe
 ###############################################################################
 t_start = time.time()
-df = read.h5_to_df('./data/MillionSongSubset/data', args.size, args.initialize)
+df = read.h5_to_df('../data/MillionSongSubset/data/A/A', args.size, args.initialize)
 t_extract = time.time()
 print('\nGot', len(df.index), 'songs in',
       round((t_extract-t_start), 2), 'seconds.')

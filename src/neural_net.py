@@ -19,7 +19,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, LeakyReLU, BatchNormalization, Activation, Softmax
 from keras.callbacks import TensorBoard, CSVLogger
 from keras.constraints import maxnorm
-from keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 from keras import backend as K
 
 
@@ -63,7 +63,8 @@ def deep_nn(X, y, label, path=None):
     name = '_'.join([OPT, str(epochs), str(batch_size), dt])
 
     # Calculate class weights to improve accuracy 
-    class_weights = dict(enumerate(compute_class_weight('balanced', np.unique(y), y)))
+    # class_weights = dict(enumerate(compute_class_weight('balanced', np.unique(y), y)))
+    class_weights = dict(enumerate(compute_class_weight(class_weight='balanced', classes=np.unique(y), y=y)))
     swm = np.array([class_weights[i] for i in y])
 
     # Convert target to categorical
