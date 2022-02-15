@@ -52,8 +52,9 @@
   <div id="search-container" class="container">
     <div class="row">
       <div class="full column" style="margin-top: 10%">
-        <h4><b>基于注意力机制的音乐推荐系统</b></h4>
-        <p>请在搜索栏搜索您所喜欢的歌曲，并在下拉列表中进行选择，我们将会据此推荐相关的音乐。</p>
+        <h4>Welcome to the Music Recommender</h4>
+        <p>Please choose some of your favorite songs from the form below, and let the algorithm return some recommendations. Just start typing and songs will appear for selection.</p>
+        <p><a href='https://github.com/jskrable/music-rec' target="_blank">The source code is here if interested. </a> </p>
       </div>
     </div>
   
@@ -66,7 +67,7 @@
     <div class="row">
       <div id="song-limit-alert-div">
         <p></p>
-        <p class="alert alert-error">最多只能选择三首歌曲！</p>
+        <p class="alert alert-error">Sorry, you can only choose three songs.</p>
       </div>
     </div>
 
@@ -75,19 +76,19 @@
       <div id="predict-div" class="twelve columns">
           <!-- selected songs go here -->
           <div class="four columns offset-by-two">
-            <button id="get-recs-button" class="button-primary" onclick="getRecs()">进行推荐</button>
+            <button id="get-recs-button" class="button-primary" onclick="getRecs()">Get Recommendations</button>
           </div>
           <div class="four columns offset-by-one">
-            <button id="clear-selected-button" class="button" onclick="clearSelected()">清除歌单</button>
+            <button id="clear-selected-button" class="button" onclick="clearSelected()">Clear Selected Songs</button>
           </div>
       </div>
     </div>
     <div class="row">
       <div class="twelve columns">
-        <input class="u-full-width" type="search" placeholder="查找歌曲..." id="search-bar">
+        <input class="u-full-width" type="search" placeholder="Search for songs..." id="search-bar">
       </div>  
 <!--       <div class="three columns">
-        <input class="button-primary" type="submit" value="搜索" id="search-btn">
+        <input class="button-primary" type="submit" value="Search" id="search-btn">
       </div> -->
     </div>
 
@@ -102,7 +103,7 @@
   <div class="container" id="recs-container">
     <div class="row">
       <div class="full column" style="margin-top: 10%">
-        <h4>您可能喜欢这些音乐:</h4>
+        <h4>You might like:</h4>
       </div>
     </div>
     <div class="row">
@@ -112,7 +113,7 @@
     </div>
     <div class="row">
       <div class="four columns offset-by-one">
-        <button id="back-button" class="button" onclick="restart()">再次尝试</button>
+        <button id="back-button" class="button" onclick="restart()">Try Again</button>
       </div>
   </div>
 

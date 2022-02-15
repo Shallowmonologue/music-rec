@@ -8,6 +8,7 @@ jack skrable
 
 # Library imports
 import time
+import h5py
 import pandas as pd
 import numpy as np
 
@@ -19,37 +20,35 @@ import preprocessing as pp
 import neural_net as nn
 import kmeans as km
 
-
 args = utils.arg_parser()
 
-# Read data from h5 files into dataframe
+# 读取MSD数据集的h5文件，并统计所用时间
 ###############################################################################
 t_start = time.time()
-df = read.h5_to_df('../data/MillionSongSubset/data/A/A', args.size, args.initialize)
+df = read.h5_to_df('../data/MillionSongSubset/data/A', args.size, args.initialize)
 t_extract = time.time()
-print('\nGot', len(df.index), 'songs in',
-      round((t_extract-t_start), 2), 'seconds.')
+print('\nGot', len(df.index), 'songs in', round((t_extract-t_start), 2), 'seconds.')
 
-# Setup directory for preprocessing and model storage
+# 设定预处理文件与训练模型的导出目录/model
 ###############################################################################
 path = utils.setup_model_dir()
 
-# Transform data into vectors for processing by neural network
+# 将数据变换为可供神经网络训练的向量
 ###############################################################################
 print('Pre-processing extracted song data...')
 df = pp.convert_byte_data(df)
 df = pp.create_target_classes(df)
-# Shuffle a few times
+# 训练集shuffle
 for i in range(5):
     df = df.iloc[np.random.permutation(len(df))]
 df = df.fillna(0)
-# Transform into NumPy matrix, normalized by column
+# 将数据调整为Numpy矩阵，按列归一化
 X, y, y_map = pp.vectorize(df, 'target', path)
 t_preproc = time.time()
 print('Cleaned and processed', len(df.index), 'rows in',
       round((t_preproc - t_extract), 2), 'seconds.')
 
-# Train neural network
+# 训练神经网络
 ###############################################################################
 print('Training neural network...')
 print('[', X.shape[1], '] x [', np.unique(y).size, ']')
@@ -62,7 +61,7 @@ print('Evaluating model and saving class probabilities...')
 predDF = pd.DataFrame.from_records(model_simple.predict(pp.scaler(X, 'robust')))
 predDF.to_pickle(path + '/model_prob.pkl')
 
-# Perform k-Means clustering and send classified data through neural network
+# 进行k均值聚类，并通过神经网络发送分类数据
 ###############################################################################
 clusters = 18
 print('Applying k-Means classifier with', clusters, 'clusters...')
@@ -76,7 +75,7 @@ print('Hybrid k-Means neural network trained in',
       round((t_km - t_nn), 2), 'seconds.')
 
 
-# Review
+# 打印测试结果
 ###############################################################################
 # plot(X, kmX[:,-1])
 plot.plot_nn_training(path, 'loss')

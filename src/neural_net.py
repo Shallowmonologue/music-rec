@@ -10,17 +10,22 @@ import os
 import time
 import datetime
 import numpy as np
+import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 from sklearn.utils.class_weight import compute_class_weight
-from keras import optimizers 
-from keras import regularizers
-from keras import initializers
-from keras.models import model_from_json
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten, LeakyReLU, BatchNormalization, Activation, Softmax
-from keras.callbacks import TensorBoard, CSVLogger
-from keras.constraints import maxnorm
+from tensorflow.keras import optimizers
+from tensorflow.keras import regularizers
+from tensorflow.keras import initializers
+from tensorflow.keras.models import model_from_json
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense,Dropout,Flatten,LeakyReLU,BatchNormalization,Activation,Softmax
+from tensorflow.keras.callbacks import TensorBoard,CSVLogger
+from tensorflow.keras.constraints import max_norm
 from tensorflow.keras.utils import to_categorical
-from keras import backend as K
+from tensorflow.keras import backend as K
+from tensorflow.keras.applications import imagenet_utils
+
+
 
 
 def set_opt(OPT, lr):
@@ -94,7 +99,7 @@ def deep_nn(X, y, label, path=None):
 
         if d > 0:
             model.add(Dense(s, kernel_initializer='normal',
-                            kernel_constraint=maxnorm(3)))
+                            kernel_constraint=max_norm(3)))
         else:
             model.add(Dense(s))
         if b:
@@ -104,7 +109,7 @@ def deep_nn(X, y, label, path=None):
 
     # Add an input layer 
     model.add(Dense(in_size, input_shape=(in_size,), activation='relu',
-                    kernel_initializer='normal', kernel_constraint=maxnorm(3)))
+                    kernel_initializer='normal', kernel_constraint=max_norm(3)))
     model.add(BatchNormalization())
     model.add(Dropout(0.5))
 
@@ -128,7 +133,7 @@ def deep_nn(X, y, label, path=None):
                   metrics=['accuracy'],
                   sample_weight_mode=swm)
 
-    tensorboard = TensorBoard(log_dir=str('./logs/'+label+'/'+name+'.json'),
+    tensorboard = TensorBoard(log_dir=str('../logs/'+label+'/'+name+'.json'),
                               histogram_freq=1,
                               write_graph=True,
                               write_images=False)   

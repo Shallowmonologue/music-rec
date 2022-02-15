@@ -8,11 +8,12 @@ jack skrable
 
 import os
 import json
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_eager_execution()
 import numpy as np
 import pandas as pd
 import flask
-from sklearn.externals import joblib
+import joblib
 
 # custom module imports
 # import predict
@@ -55,7 +56,7 @@ def load_model():
     lookupDF = pd.read_hdf('../frontend/data/lookup.h5', 'df')
 
     # Model predictions for comparison
-    probDF = pd.read_pickle('../data/model_prob.pkl')
+    probDF = pd.read_pickle('..//model/working/model_prob.pkl')
 
 
 def process_metadata_list(col):
