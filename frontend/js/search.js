@@ -13,9 +13,9 @@ $(function() {
         search_terms.push(value.toLowerCase());
         if (value != "") {
             displaySongs(searchOnType(value));
-            /*setTimeout(function(){
+            setTimeout(function(){
 				displaySongs(searchOnType(value));
-			}, 2500);*/
+			}, 2500);
         }
     });
 
@@ -44,7 +44,7 @@ function displaySongs(list) {
 		}
 		html += '<button id="add-' + entry.metadata_songs_song_id + 
 				'" value="' + entry.metadata_songs_title + '" title="Add ' +
-				entry.metadata_songs_title + '" style="float: right;">Add</button>'
+				entry.metadata_songs_title + '" style="float: right;">添加</button>'
 		html += '</p></div>'
 	})
 
@@ -74,8 +74,8 @@ function displaySongs(list) {
 
 		        html = '<div class="four columns" id="' + key + 
 		        	   '"><strong>' + title + 
-		        	   '</strong> <a href="#" id="drop-' + key + 
-		        	   '" onclick="closeSong(this)">Remove?</a>'
+		        	   '</strong> <button href="#" id="drop-' + key +
+		        	   '" onclick="closeSong(this)">删除该歌曲</button>'
 		        	   + '</div>'
 
 		        $('#chosen-songs-div').append(html);
@@ -106,7 +106,7 @@ function displayRecs(data) {
         html += '<a href="https://www.google.com/search?q='
         query = [entry.metadata_songs_title, entry.metadata_songs_artist_name]
                     .join(' ').toLowerCase().split(' ').join('+')
-        html += query + '" target="_blank">Listen</a>'
+        html += query + '" target="_blank">试听一下？</a>'
         html += '</p></div>'
 	})
 

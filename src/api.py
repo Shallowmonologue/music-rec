@@ -8,8 +8,8 @@ jack skrable
 
 import os
 import json
-import tensorflow.compat.v1 as tf
-tf.disable_eager_execution()
+# import tensorflow.compat.v1 as tf
+import tensorflow as tf
 import numpy as np
 import pandas as pd
 import flask
@@ -25,7 +25,7 @@ import preprocessing as pp
 app = flask.Flask(__name__)
 model = None
 # os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-tf.logging.set_verbosity(tf.logging.ERROR)
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 
 def load_model():
@@ -35,12 +35,12 @@ def load_model():
     global max_list
     global model
     global scaler
-    global graph
+    # global graph
     global probDF
 
     # Load model
     model = nn.load_model('../model/working/std')
-    graph = tf.get_default_graph()
+    # graph = tf.get_default_graph()
 
     # Load preprocessing dependencies
     with open('../data/song-file-map.json', 'r') as f:
@@ -111,18 +111,19 @@ def get_recs(song_ids):
     # Get saved scaler
     # X = scaler.transform(X)
     print('Model predicting...')
-    with graph.as_default():
-        predictions = model.predict(X)
+    # with graph.as_default():
+    predictions = model.predict(X)
 
     classes = [column_maps['target'][i.argmax()] for i in predictions]
 
-    model_prob = probDF[probDF.columns[:-1]].values
+    # model_prob = probDF[probDF.columns[:-1]].values
+    model_prob = probDF[probDF.columns].values
 
-    rec_ids = [probDF.iloc[np.argmin(np.min(np.sqrt((pred - model_prob)**2),axis=1))].id
+    rec_ids = [probDF.iloc[np.argmin(np.min(np.sqrt((model_prob-pred)**2),axis=1))].name
                 for pred in predictions]
 
-    recs = lookupDF.loc[lookupDF.metadata_songs_song_id.isin(
-        rec_ids)].to_dict('records')
+    # recs = lookupDF.loc[lookupDF.metadata_songs_song_id.isin(rec_ids)].to_dict('records')
+    recs = lookupDF.loc[rec_ids].to_dict('records')
 
     return classes, recs
 
