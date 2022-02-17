@@ -1,16 +1,8 @@
-#!/usr/bin/env python3
-# coding: utf-8
-"""
-genre_splitter.py
-04-17-19
-jack skrable
-"""
-
 import re
 import numpy as np
 from collections import Counter
 
-# 根据关键字
+# 根据关键字确定音乐流派所属
 def target_genre(row):
 
     try:

@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# coding: utf-8
-"""
-plot.py
-04-22-19
-jack skrable
-"""
-
 import sys
 import os
 import logging as log
@@ -35,8 +27,6 @@ def lda(X, y, archive=None):
 def tsne(X, archive=None):
 
     X = TSNE(n_components=2, verbose=1).fit_transform(X)
-                # learning_rate=500.0,
-                # perplexity=35).fit_transform(X)
 
     return X
 
@@ -96,13 +86,12 @@ def animate_training(path):
     image_dir = os.fsencode(path)
     files = os.listdir(image_dir)
 
-    # Get list of filenames including path
+    # 获取文件名列表
     fnames = [path+os.fsdecode(f) for f in files if f.endswith(b'.png')]
     fnames.sort()
 
-    # Read images
+    # 读取图片
     images = [im.imread(f) for f in fnames]
 
-    # Write GIF
-    # Duration per frame
+    # 转化为gif
     im.mimsave(os.path.join(path+'animate.gif'), images, duration=0.10)

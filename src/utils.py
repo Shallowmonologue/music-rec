@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# coding: utf-8
-"""
-utils.py
-04-10-19
-jack skrable
-"""
-
 import os
 import argparse
 import time
@@ -15,7 +7,7 @@ import pandas as pd
 import preprocessing as pp
 
 
-# CHECK MODEL
+# 检查model
 def model_check(X,y_map,n,df,model):
     for i in range(n):
         chk=np.random.randint(df.shape[0])
@@ -46,16 +38,15 @@ def setup_model_dir():
 
 
 def arg_parser():
-    # function to parse arguments sent to CLI
-    # setup argument parsing with description and -h method
+    # 使用description和-h方法分析设置参数
     parser=argparse.ArgumentParser(
-        description='Music recommendation engine using a neural network')
-    # add size int
+        description='Music recommendation System')
+    # 添加文件数量int变量
     parser.add_argument('-s','--size',default=10000,type=int,nargs='?',
                         help='the number of files to use for training')
-    # add iterations int
+    # 添加初始化变量
     parser.add_argument('-i','--initialize',default=False,type=bool,nargs='?',
                         help='flag to run initial setup for web app')
-    # parse args and return
+    # 返回args
     args=parser.parse_args()
     return args

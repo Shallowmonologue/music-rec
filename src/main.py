@@ -1,18 +1,7 @@
-#!/usr/bin/env python3
-# coding: utf-8
-"""
-main.py
-03-29-19
-jack skrable
-"""
-
-# Library imports
 import time
 import h5py
 import pandas as pd
 import numpy as np
-
-# Custom imports
 import utils
 import plot
 import read_h5 as read
@@ -54,13 +43,12 @@ model_simple = nn.deep_nn(pp.scaler(X, 'robust', path), y, 'std', path)
 t_nn = time.time()
 print('Model trained costs', round((t_nn - t_preproc), 2), 'seconds.')
 
-# 验证模型
+# 验证模型并保存最终分类结果
 print('Evaluating model and saving class probabilities...')
 predDF = pd.DataFrame.from_records(model_simple.predict(pp.scaler(X, 'robust')))
 predDF.to_pickle(path + '/model_prob.pkl')
 
-# 进行k均值聚类，并通过神经网络发送分类数据
-###############################################################################
+# k均值聚类，再通过神经网络进行训练
 clusters = 18
 print('Applying k-Means classifier with', clusters, 'clusters...')
 kmX = km.kmeans(pp.scaler(X, 'robust', path), clusters)
@@ -69,12 +57,9 @@ print('Training neural network...')
 print('[', kmX.shape[1], '] x [', np.unique(y).size, ']')
 model_classified = nn.deep_nn(kmX, y, 'hyb', path)
 t_km = time.time()
-print('Hybrid k-Means neural network trained in',
-      round((t_km - t_nn), 2), 'seconds.')
+print('Hybrid k-Means neural network trained in', round((t_km - t_nn), 2), 'seconds.')
 
 
 # 打印测试结果
-###############################################################################
-# plot(X, kmX[:,-1])
 plot.plot_nn_training(path, 'loss')
 plot.plot_nn_training(path, 'accuracy')

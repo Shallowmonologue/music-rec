@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# coding: utf-8
-"""
-kmeans.py
-04-08-19
-jack skrable
-"""
-
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -14,11 +6,11 @@ import joblib
 
 def kmeans(X, clusters, archive=None):
 
-    # Perform kmeans classifier
+    # 构造K均值函数
     kmeans = KMeans(n_clusters=clusters).fit(X)
-    # Get classes
+    # 获取分类
     classes = kmeans.labels_.reshape(-1,1)
-    # Append to input matrix
+    # 添加到输入矩阵
     X = np.hstack((X, kmeans.labels_.reshape(-1,1)))
     if archive is not None:
         joblib.dump(kmeans, archive+'/kmeans/model.joblib')

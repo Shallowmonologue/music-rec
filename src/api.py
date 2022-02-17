@@ -1,30 +1,17 @@
-#!/usr/bin/env python3
-# coding: utf-8
-"""
-api.py
-04-14-19
-jack skrable
-"""
-
 import os
 import json
-# import tensorflow.compat.v1 as tf
 import tensorflow as tf
 import numpy as np
 import pandas as pd
 import flask
 import joblib
-
-# custom module imports
-# import predict
 import neural_net as nn
 import read_h5 as read
 import preprocessing as pp
 
-# initialize our Flask application and the Keras model
+# 初始化flask
 app = flask.Flask(__name__)
 model = None
-# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 
@@ -35,14 +22,12 @@ def load_model():
     global max_list
     global model
     global scaler
-    # global graph
     global probDF
 
-    # Load model
+    # 载入模型
     model = nn.load_model('../model/working/std')
-    # graph = tf.get_default_graph()
 
-    # Load preprocessing dependencies
+    # 载入预处理文件
     with open('../data/song-file-map.json', 'r') as f:
         song_file_map = json.load(f)
     with open('../model/working/preprocessing/maps.json', 'r') as f:
@@ -52,10 +37,10 @@ def load_model():
 
     scaler = joblib.load('../model/working/preprocessing/robust.scaler')
 
-    # Load song ID lookup for frontend
+    # 载入歌曲ID对应表
     lookupDF = pd.read_hdf('../frontend/data/lookup.h5', 'df')
 
-    # Model predictions for comparison
+    # 模型预测
     probDF = pd.read_pickle('..//model/working/model_prob.pkl')
 
 
@@ -83,14 +68,11 @@ def preprocess_predictions(df):
         else:
             xx = df[col].values[..., None]
 
-        # Normalize each column
         xx = xx / (np.linalg.norm(xx) + 0.00000000000001)
-        # print(col,'shape',xx.shape)
         try:
             output = np.hstack((output, xx))
         except NameError:
             output = xx
-        # print('output shape', output.shape)
 
     return output
 
@@ -98,20 +80,17 @@ def preprocess_predictions(df):
 def get_recs(song_ids):
 
     song_ids = song_ids.split(',')
-    # Lookup filenames by song id
+    # 根据歌曲ID查询文件名
     files = [song_file_map[id] for id in song_ids]
 
-    # Extract raw data from files
+    # 提取文件数据
     df = read.extract_song_data(files)
     df = pp.convert_byte_data(df)
     df = df.fillna(0)
 
-    # Vectorize
+    # 向量化并进行预测
     X = preprocess_predictions(df)
-    # Get saved scaler
-    # X = scaler.transform(X)
     print('Model predicting...')
-    # with graph.as_default():
     predictions = model.predict(X)
 
     classes = [column_maps['target'][i.argmax()] for i in predictions]
@@ -130,28 +109,28 @@ def get_recs(song_ids):
 
 @app.route("/recommend", methods=["GET"])
 def recommend():
-    # Initialize response
+    # 初始化响应
     data = {"success": False}
 
-    # GET requests
+    # 若有GET请求
     if flask.request.method == "GET":
 
-        # Snag query string of song IDs
+        # 搜索歌曲ID
         song_ids = flask.request.args.get('songs')
-        # Get classifications and recommendations
+        # 获取分类和推荐结果
         classes, recs = get_recs(song_ids)
 
     print(classes)
     print(recs)
 
-    # Create response entity
+    # 创建响应实体
     data['entity'] = {'classes': classes}
     data['entity'].update({'recommendations': recs})
 
-    # indicate that the request was a success
+    # 请求成功
     data["success"] = True
 
-    # JSONify data for response
+    # JSONify
     response = flask.jsonify(data)
     # Allow CORS
     response.headers.add('Access-Control-Allow-Origin', '*')
@@ -161,36 +140,34 @@ def recommend():
 
 @app.route("/lookup", methods=["GET"])
 def lookup():
-    # initialize the data dictionary that will be returned from the
-    # view
+    # 初始化
     data = {"success": False}
 
-    # ensure an image was properly uploaded to our endpoint
+    # 确保图片已被正确上传
     if flask.request.method == "GET":
 
-        # Get lookup data here
+        # 获取记录数据
         data['entity'] = lookupDF.to_dict('records')
 
-        # indicate that the request was a success
+        # 请求成功
         data["success"] = True
 
-    # JSONify data for response
+    # JSONify
     response = flask.jsonify(data)
-    # Allow CORS
+    # CORS
     response.headers.add('Access-Control-Allow-Origin', '*')
 
     return response
 
 
-# if this is the main thread of execution first load the model and
-# then start the server
+# 加载模型并启动服务器
 if __name__ == "__main__":
     print(" * Starting Flask server and loading Keras model...")
     print(" * Please wait until server has fully started")
 
-    # Load model and dependencies
+    # 载入模型与相关文件
     load_model()
 
     print(' * Server is active')
-    # Run app
+    # 启动
     app.run(host='0.0.0.0', port=5001)

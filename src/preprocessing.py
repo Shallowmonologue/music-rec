@@ -1,22 +1,12 @@
-#!/usr/bin/env python3
-# coding: utf-8
-"""
-preprocessing.py
-02-22-19
-jack skrable
-"""
-
 import json
 import pandas as pd
 import numpy as np
 import genre_splitter as gs
 from collections import Counter
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
-# from sklearn.externals import joblib
 import joblib
 
 
-# Globals
 max_list = {}
 maps = {}
 
@@ -60,7 +50,6 @@ def sample_flat_array(row):
 
 def process_audio(col):
     dim = len(col.iloc[0].shape)
-    # size = max_length(col)
 
     if dim > 1:
         col = col.apply(sample_ndarray)
@@ -71,7 +60,7 @@ def process_audio(col):
     return xx
 
 
-# Function to vectorize a column made up of numpy arrays containing strings
+# 将包含字符串的数组列转化为向量
 def process_metadata_list(col, archive=None):
     x_map, _ = np.unique(np.concatenate(col.values, axis=0), return_inverse=True)
     col = col.apply(lambda x: lookup_discrete_id(x, x_map))
@@ -89,7 +78,6 @@ def lookup_discrete_id(row, m):
     return row
 
 
-# Need to save this scaler
 def scaler(X, kind='robust', archive=None):
     if kind == 'mms':
         scaler = MinMaxScaler()
@@ -103,7 +91,7 @@ def scaler(X, kind='robust', archive=None):
     return scaler.transform(X)
 
 
-# Takes a dataframe full of encoded strings and cleans it
+# 清理dataframe
 def convert_byte_data(df):
 
     print('Cleaning byte data...')
@@ -135,11 +123,10 @@ def convert_byte_data(df):
     return df
 
 
-# Function to vectorize full dataframe 
+# 将dataframe向量化
 def vectorize(data, label, archive=None, predict=False):
 
     print('Vectorizing dataframe...')
-    # output = np.zeros(shape=(len(data),1))
 
     for col in data:
         print('Vectorizing ',col) 
@@ -163,8 +150,7 @@ def vectorize(data, label, archive=None, predict=False):
             else:
                 xx = data[col].values[...,None]
 
-            # if xx.shape[0] == len(data):
-            # Normalize each column    
+            # 每列标准化
             xx = xx / (np.linalg.norm(xx) + 0.00000000000001)
             try:
                 output = np.hstack((output, xx))
